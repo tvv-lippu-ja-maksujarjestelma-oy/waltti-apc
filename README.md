@@ -30,6 +30,9 @@ flowchart TB
     end
     db[("APC analytics PostgreSQL")]
   end
+  subgraph preset ["preset.io"]
+    superset("Apache Superset")
+  end
   subgraph azure ["Microsoft Azure"]
     powerbi("Power BI")
   end
@@ -47,6 +50,7 @@ flowchart TB
   pulsarclients --> db
   dbschemamigrator --> db
   db --> powerbi
+  db --> superset
 
   %% Styling
 
@@ -56,25 +60,27 @@ flowchart TB
   class streamnative env
   class cloudamqp env
   class azure env
+  class preset env
 
   classDef external fill:#1f78b6,stroke:#000,color:#fff
   class onboard external
   class rtpi external
+  class powerbi external
 
   classDef done fill:#b2e08a,stroke:#000
   class mqtt done
   class pulsar done
   class mqttpulsarforwarder done
+  class superset done
+  class dbschemamigrator done
+  class testdatagenerator done
+  class db done
 
   classDef later fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
   class httppulsarpoller later
 
   classDef next fill:#a5cee3,stroke:#000,stroke-width:1px,color:#000,stroke-dasharray: 6 6
-  class testdatagenerator next
   class pulsarclients next
-  class dbschemamigrator next
-  class db next
-  class powerbi next
 
   %% Legend
 
@@ -103,10 +109,9 @@ flowchart TB
     httppulsarpoller("http-pulsar-poller")
     gtfsrtdeduplicator("waltti-apc-gtfsrt-deduplicator")
     matcher("waltti-apc-journey-matcher")
-    testdatagenerator("waltti-apc-test-data-generator")
+    testdatagenerator("waltti-apc-aggregation-test-data-generator")
     aggregator("waltti-apc-aggregator")
-    dbarranger("waltti-apc-db-arranger")
-    postgresqlfeeder("waltti-apc-db-feeder")
+    dbsink("waltti-apc-analytics-db-sink")
   end
   subgraph pulsartopics["Apache Pulsar topics"]
     subgraph nssource["namespace source"]
@@ -121,9 +126,6 @@ flowchart TB
     subgraph nsaggregation["namespace aggregation"]
       aggregated[/"aggregated-apc-journey"/]
     end
-    subgraph nssink["namespace sink"]
-      apcdb[/"apc-db"/]
-    end
   end
 
   %% Edges
@@ -137,12 +139,10 @@ flowchart TB
   mqttdeduplicated --> matcher
   gtfsrtdedupjyvaskyla --> matcher
   matcher --> matchedapcjourney
-  testdatagenerator --> matchedapcjourney
   matchedapcjourney --> aggregator
   aggregator --> aggregated
-  aggregated --> dbarranger
-  dbarranger --> apcdb
-  apcdb --> postgresqlfeeder
+  testdatagenerator --> aggregated
+  aggregated --> dbsink
 
   %% Styling
 
@@ -152,11 +152,13 @@ flowchart TB
   class nssource env
   class nsmatch env
   class nsaggregation env
-  class nssink env
 
   classDef done fill:#b2e08a,stroke:#000
   class mqttpulsarforwarder done
   class mqttraw done
+  class testdatagenerator done
+  class dbsink done
+  class aggregated done
 
   classDef later fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
   class httppulsarpoller later
@@ -169,13 +171,8 @@ flowchart TB
 
   classDef next fill:#a5cee3,stroke:#000,stroke-width:1px,color:#000,stroke-dasharray: 6 6
 
-  class testdatagenerator next
   class aggregator next
-  class dbarranger next
-  class postgresqlfeeder next
   class matchedapcjourney next
-  class aggregated next
-  class apcdb next
 
   %% Legend
 
