@@ -22,11 +22,11 @@ flowchart TB
       pulsar("Apache Pulsar cluster")
     end
     subgraph kubernetes["Kubernetes Autopilot"]
-      mqttpulsarforwarder("mqtt-pulsar-forwarder")
-      httppulsarpoller("http-pulsar-poller")
-      testdatagenerator("Test data generator<br/>as Pulsar client")
+      mqttpulsarforwarder("MQTT message forwarder:<br/>mqtt-pulsar-forwarder")
+      httppulsarpoller("GTFS Realtime forwarder:<br/>http-pulsar-poller")
+      testdatagenerator("Test data generator:<br/>waltti-apc-aggregation-test-data-generator")
       pulsarclients("APC business logic<br/>as Pulsar clients")
-      dbschemamigrator("Database schema migrator")
+      dbschemamigrator("Database schema migrator:<br/>waltti-apc-analytics-db-schema-migrator")
     end
     db[("APC analytics PostgreSQL")]
   end
