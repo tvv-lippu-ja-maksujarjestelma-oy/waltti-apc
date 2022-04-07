@@ -77,9 +77,9 @@ flowchart TB
   class db done
 
   classDef later fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
-  class httppulsarpoller later
 
   classDef next fill:#a5cee3,stroke:#000,stroke-width:1px,color:#000,stroke-dasharray: 6 6
+  class httppulsarpoller next
   class pulsarclients next
 
   %% Legend
@@ -161,18 +161,18 @@ flowchart TB
   class aggregated done
 
   classDef later fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
-  class httppulsarpoller later
-  class mqttdeduplicator later
-  class gtfsrtdeduplicator later
-  class mqttdeduplicated later
-  class gtfsrtrawjyvaskyla later
-  class gtfsrtdedupjyvaskyla later
-  class matcher later
 
   classDef next fill:#a5cee3,stroke:#000,stroke-width:1px,color:#000,stroke-dasharray: 6 6
 
   class aggregator next
   class matchedapcjourney next
+  class httppulsarpoller next
+  class mqttdeduplicator next
+  class gtfsrtdeduplicator next
+  class mqttdeduplicated next
+  class gtfsrtrawjyvaskyla next
+  class gtfsrtdedupjyvaskyla next
+  class matcher next
 
   %% Legend
 
