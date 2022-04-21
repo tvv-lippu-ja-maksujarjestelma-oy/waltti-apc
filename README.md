@@ -75,11 +75,11 @@ flowchart TB
   class dbschemamigrator done
   class testdatagenerator done
   class db done
+  class httppulsarpoller done
 
   classDef later fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
 
   classDef next fill:#a5cee3,stroke:#000,stroke-width:1px,color:#000,stroke-dasharray: 6 6
-  class httppulsarpoller next
   class pulsarclients next
 
   %% Legend
@@ -105,9 +105,8 @@ flowchart TB
 
   subgraph pulsarclients["Apache Pulsar clients"]
     mqttpulsarforwarder("mqtt-pulsar-forwarder")
-    mqttdeduplicator("waltti-apc-mqtt-deduplicator")
+    mqttdeduplicator("pulsar-topic-deduplicator")
     httppulsarpoller("http-pulsar-poller")
-    gtfsrtdeduplicator("waltti-apc-gtfsrt-deduplicator")
     matcher("waltti-apc-journey-matcher")
     testdatagenerator("waltti-apc-aggregation-test-data-generator")
     aggregator("waltti-apc-aggregator")
@@ -117,8 +116,7 @@ flowchart TB
     subgraph nssource["namespace source"]
       mqttraw[/"mqtt-apc-from-vehicle"/]
       mqttdeduplicated[/"mqtt-apc-from-vehicle-deduplicated"/]
-      gtfsrtrawjyvaskyla[/"gtfsrt-jyvaskyla"/]
-      gtfsrtdedupjyvaskyla[/"gtfsrt-jyvaskyla-deduplicated"/]
+      gtfsrtrawjyvaskyla[/"gtfs-realtime-vehicleposition-fi-jyvaskyla"/]
     end
     subgraph nsmatch["namespace match"]
       matchedapcjourney[/"matched-apc-journey"/]
@@ -134,10 +132,8 @@ flowchart TB
   mqttraw --> mqttdeduplicator
   mqttdeduplicator --> mqttdeduplicated
   httppulsarpoller --> gtfsrtrawjyvaskyla
-  gtfsrtrawjyvaskyla --> gtfsrtdeduplicator
-  gtfsrtdeduplicator --> gtfsrtdedupjyvaskyla
   mqttdeduplicated --> matcher
-  gtfsrtdedupjyvaskyla --> matcher
+  gtfsrtrawjyvaskyla --> matcher
   matcher --> matchedapcjourney
   matchedapcjourney --> aggregator
   aggregator --> aggregated
@@ -159,19 +155,16 @@ flowchart TB
   class testdatagenerator done
   class dbsink done
   class aggregated done
+  class httppulsarpoller done
+  class mqttdeduplicator done
+  class mqttdeduplicated done
+  class gtfsrtrawjyvaskyla done
 
   classDef later fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
 
   classDef next fill:#a5cee3,stroke:#000,stroke-width:1px,color:#000,stroke-dasharray: 6 6
-
   class aggregator next
   class matchedapcjourney next
-  class httppulsarpoller next
-  class mqttdeduplicator next
-  class gtfsrtdeduplicator next
-  class mqttdeduplicated next
-  class gtfsrtrawjyvaskyla next
-  class gtfsrtdedupjyvaskyla next
   class matcher next
 
   %% Legend
