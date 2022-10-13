@@ -109,17 +109,15 @@ flowchart TB
     httppulsarpoller("http-pulsar-poller")
     matcher("waltti-apc-journey-matcher")
     testdatagenerator("waltti-apc-aggregation-test-data-generator")
-    aggregator("waltti-apc-aggregator")
     dbsink("waltti-apc-analytics-db-sink")
   end
   subgraph pulsartopics["Apache Pulsar topics"]
     subgraph nssource["namespace source"]
       mqttraw[/"mqtt-apc-from-vehicle"/]
-      mqttdeduplicated[/"mqtt-apc-from-vehicle-deduplicated"/]
       gtfsrtrawjyvaskyla[/"gtfs-realtime-vehicleposition-fi-jyvaskyla"/]
     end
-    subgraph nsmatch["namespace match"]
-      matchedapcjourney[/"matched-apc-journey"/]
+    subgraph nsdedup["namespace dedup"]
+      mqttdeduplicated[/"mqtt-apc-from-vehicle-deduplicated"/]
     end
     subgraph nsaggregation["namespace aggregation"]
       aggregated[/"aggregated-apc-journey"/]
@@ -134,9 +132,7 @@ flowchart TB
   httppulsarpoller --> gtfsrtrawjyvaskyla
   mqttdeduplicated --> matcher
   gtfsrtrawjyvaskyla --> matcher
-  matcher --> matchedapcjourney
-  matchedapcjourney --> aggregator
-  aggregator --> aggregated
+  matcher --> aggregated
   testdatagenerator --> aggregated
   aggregated --> dbsink
 
@@ -148,6 +144,7 @@ flowchart TB
   class nssource env
   class nsmatch env
   class nsaggregation env
+  class nsdedup env
 
   classDef done fill:#b2e08a,stroke:#000
   class mqttpulsarforwarder done
@@ -159,13 +156,11 @@ flowchart TB
   class mqttdeduplicator done
   class mqttdeduplicated done
   class gtfsrtrawjyvaskyla done
+  class matcher done
 
   classDef later fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
 
   classDef next fill:#a5cee3,stroke:#000,stroke-width:1px,color:#000,stroke-dasharray: 6 6
-  class aggregator next
-  class matchedapcjourney next
-  class matcher next
 
   %% Legend
 
