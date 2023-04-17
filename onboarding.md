@@ -106,3 +106,5 @@ If you are forking an open-source repository from another project:
 1. Check that it can be used as part of our `EUPL-1.2`-licensed project.
 1. Use the license of the original repository if possible.
 1. Do not change the name of the fork from the original unless it makes sense.
+
+Link from this main repo to the new repository and vice versa.
