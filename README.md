@@ -139,7 +139,7 @@ flowchart TB
     gtfsrtdeduplicatedfikuopio[/"gtfsrt-vp-deduplicated-fi-kuopio"/]
     mqttdeduplicated[/"mqtt-apc-from-vehicle-deduplicated"/]
   end
-  subgraph nspublished["namespace published (schema enforced)"]
+  subgraph nsanonymized["namespace anonymized (schema enforced)"]
     anonymized[/"anonymized-apc-journey"/]
   end
   subgraph nssource["namespace source"]
@@ -211,7 +211,7 @@ flowchart TB
   class nsaggregated env
   class nscleaned env
   class nsdeduplicated env
-  class nspublished env
+  class nsanonymized env
   class nssource env
 
   classDef external fill:#1f78b6,stroke:#000,color:#fff
