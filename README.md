@@ -17,29 +17,20 @@ flowchart TB
   rtpiinput("Waltti RTPI")
   rtpioutput("Waltti RTPI with APC data")
   vehicleregistry("Vehicle registry")
-  subgraph aws["Amazon Web Services (eu-north-1, Stockholm)"]
-    subgraph preset["Preset"]
-      superset("Apache Superset")
-    end
-  end
   subgraph azure["Microsoft Azure"]
     powerbi("Power BI")
   end
   subgraph gcp["Google Cloud Platform (europe-west3, Frankfurt)"]
-    db[("APC analytics PostgreSQL")]
     subgraph cloudamqp["CloudAMQP"]
       mqtt("MQTT broker")
     end
     subgraph kubernetes["Kubernetes Autopilot"]
-      apitodb("APC analytics PostgreSQL feeder:<br/>waltti-apc-analytics-db-sink")
-      apitopowerbi("API to Power BI")
-      apitortpioutput("API to Waltti RTPI")
-      dbschemamigrator("Database schema migrator:<br/>waltti-apc-analytics-db-schema-migrator")
-      httppulsarpoller("GTFS Realtime forwarder:<br/>http-pulsar-poller")
-      mqttpulsarforwarder("MQTT message forwarder:<br/>mqtt-pulsar-forwarder")
+      httppulsarpoller("GTFS Realtime Vehicle Position poller:<br/>http-pulsar-poller")
+      mqttpulsarforwarder("Vehicle APC data MQTT forwarder:<br/>mqtt-pulsar-forwarder")
       pulsarclients("APC business logic<br/>as Pulsar clients")
-      testdatagenerator("Test data generator:<br/>waltti-apc-aggregation-test-data-generator")
-      vehicleregistryapiuser("Vehicle registry API user")
+      pulsarmqttforwardertopowerbi("Precise APC data MQTT forwarder:<br/>HSLdevcom/pulsar-mqtt-gateway")
+      pulsarmqttforwardertortpioutput("Anonymized APC data MQTT forwarder:<br/>HSLdevcom/pulsar-mqtt-gateway")
+      vehicleregistryapiuser("Vehicle registry poller:<br/>http-pulsar-poller")
     end
     subgraph streamnative["StreamNative Cloud Hosted"]
       pulsar("Apache Pulsar cluster")
@@ -48,33 +39,23 @@ flowchart TB
 
   %% Edges
 
-  apitodb --> db
-  apitopowerbi --> powerbi
-  apitortpioutput --> rtpioutput
-  db --> superset
-  dbschemamigrator --> db
   httppulsarpoller --> pulsar
   mqtt --> mqttpulsarforwarder
+  mqtt --> powerbi
+  mqtt --> rtpioutput
   mqttpulsarforwarder --> pulsar
   onboard --> mqtt
   pulsar --> pulsarclients
-  pulsarclients --> apitodb
-  pulsarclients --> apitopowerbi
-  pulsarclients --> apitortpioutput
+  pulsar --> pulsarmqttforwardertopowerbi
+  pulsar --> pulsarmqttforwardertortpioutput
   pulsarclients --> pulsar
+  pulsarmqttforwardertopowerbi --> mqtt
+  pulsarmqttforwardertortpioutput --> mqtt
   rtpiinput --> httppulsarpoller
-  testdatagenerator --> pulsar
   vehicleregistry --> vehicleregistryapiuser
   vehicleregistryapiuser --> pulsar
 
   %% Styling
-
-  classDef deprecated fill:#fbaf60,stroke:#000,stroke-width:1px,color:#000,stroke-dasharray: 6 6
-  class apitodb deprecated
-  class db deprecated
-  class dbschemamigrator deprecated
-  class superset deprecated
-  class testdatagenerator deprecated
 
   classDef done fill:#b2e08a,stroke:#000
   class httppulsarpoller done
@@ -98,24 +79,26 @@ flowchart TB
   class rtpioutput external
   class vehicleregistry external
 
-  classDef todo fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
-  class apitopowerbi todo
-  class apitortpioutput todo
-  class pulsarclients todo
-  class vehicleregistryapiuser todo
+  classDef implemented fill:#dfc4f2,stroke:#000
+  class pulsarmqttforwardertopowerbi implemented
+  class pulsarmqttforwardertortpioutput implemented
+  class vehicleregistryapiuser implemented
 
-   %% Legend
+  classDef todo fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
+  class pulsarclients todo
+
+  %% Legend
 
   subgraph legend["Legend"]
     legendtodo("Todo")
+    legendimplemented("Implemented but not deployed")
     legenddone("Done")
-    legenddeprecated("Deprecated")
     legendexternal("External")
   end
   class legend env
-  class legenddeprecated deprecated
   class legenddone done
   class legendexternal external
+  class legendimplemented implemented
   class legendtodo todo
 ```
 
@@ -126,38 +109,38 @@ flowchart TB
 
   %% Nodes
 
-  accumulator("waltti-apc-journey-accumulator")
-  anonymizer("waltti-apc-anonymizer")
-  apitopowerbi("API to Power BI")
-  apitortpioutput("API to Waltti RTPI")
-  dbsink("waltti-apc-analytics-db-sink")
+  anonymizer("anonymizer:<br/>waltti-apc-anonymizer")
   externalsinks("External sinks")
   externalsources("External sources")
-  gtfsrtentitydeduplicatorfijyvaskyla("pulsar-topic-deduplicator")
-  gtfsrtentitydeduplicatorfikuopio("pulsar-topic-deduplicator")
-  gtfsrtentityseparatorfijyvaskyla("waltti-apc-gtfsrt-entity-separator")
-  gtfsrtentityseparatorfikuopio("waltti-apc-gtfsrt-entity-separator")
-  httppulsarpollerfijyvaskyla("http-pulsar-poller (1 / AZ)")
-  httppulsarpollerfikuopio("http-pulsar-poller (1 / AZ)")
-  matcher("waltti-apc-journey-matcher")
-  mqttapcmessagecleaner("waltti-apc-mqtt-apc-message-cleaner")
-  mqttdeduplicator("pulsar-topic-deduplicator")
-  mqttpulsarforwarder("mqtt-pulsar-forwarder (1 / AZ)")
-  vehicleregistryapiuser("Vehicle registry API user")
+  gtfsrtentitydeduplicatorfijyvaskyla("gtfsrt-vp-deduplicator-fi-jyvaskyla:<br/>pulsar-topic-deduplicator")
+  gtfsrtentitydeduplicatorfikuopio("gtfsrt-vp-deduplicator-fi-kuopio:<br/>pulsar-topic-deduplicator")
+  gtfsrtentityseparatorfijyvaskyla("gtfsrt-vp-entity-separator-fi-jyvaskyla:<br/>waltti-apc-gtfsrt-entity-separator")
+  gtfsrtentityseparatorfikuopio("gtfsrt-vp-entity-separator-fi-kuopio:<br/>waltti-apc-gtfsrt-entity-separator")
+  gtfsrtpollerfijyvaskyla("gtfsrt-vp-poller-fi-jyvaskyla:<br/>http-pulsar-poller (1 / AZ)")
+  httppulsarpollerfikuopio("gtfsrt-vp-poller-fi-kuopio:<br/>http-pulsar-poller (1 / AZ)")
+  matcher("journey-matcher:<br/>waltti-apc-journey-matcher")
+  mqttapcmessagecleaner("vehicle-apc-message-cleaner:<br/>waltti-apc-mqtt-apc-message-cleaner")
+  mqttdeduplicator("vehicle-apc-deduplicator:<br/>pulsar-topic-deduplicator")
+  mqttpulsarforwarder("vehicle-apc-forwarder:<br/>mqtt-pulsar-forwarder (1 / AZ)")
+  pulsarmqttforwardertopowerbi("Precise APC data MQTT forwarder:<br/>HSLdevcom/pulsar-mqtt-gateway")
+  pulsarmqttforwardertortpioutput("Anonymized APC data MQTT forwarder:<br/>HSLdevcom/pulsar-mqtt-gateway")
+  vehicleanonymizationprofiler("vehicle-anonymization-profiler:<br/>waltti-apc-vehicle-anonymization-profiler")
+  vehicleregistrypollerfijyvaskyla("vehicle-registry-poller-fi-jyvaskyla:<br/>http-pulsar-poller (1 is enough)")
+  vehicleregistrypollerfikuopio("vehicle-registry-poller-fi-kuopio:<br/>http-pulsar-poller (1 is enough)")
   subgraph nsaggregation["namespace aggregation"]
-    accumulated[/"accumulated-apc-journey"/]
     aggregated[/"aggregated-apc-journey"/]
   end
-  subgraph nscleaned["namespace cleaned"]
+  subgraph nscleaned["namespace cleaned (schema enforced)"]
     mqttcleaned[/"mqtt-apc-from-vehicle-cleaned"/]
+    vehicleanonymizationprofile[/"vehicle-anonymization-profile"/]
   end
-  subgraph nsopen["namespace open"]
-    anonymized[/"anonymized-apc-journey"/]
-  end
-  subgraph nsretained["namespace retained"]
+  subgraph nsdeduplicated["namespace deduplicated"]
     gtfsrtdeduplicatedfijyvaskyla[/"gtfsrt-vp-deduplicated-fi-jyvaskyla"/]
     gtfsrtdeduplicatedfikuopio[/"gtfsrt-vp-deduplicated-fi-kuopio"/]
     mqttdeduplicated[/"mqtt-apc-from-vehicle-deduplicated"/]
+  end
+  subgraph nsopen["namespace open"]
+    anonymized[/"anonymized-apc-journey"/]
   end
   subgraph nssource["namespace source"]
     gtfsrtrawfijyvaskyla[/"gtfsrt-vp-fi-jyvaskyla"/]
@@ -165,25 +148,21 @@ flowchart TB
     gtfsrtseparatedfijyvaskyla[/"gtfsrt-vp-entities-separated-fi-jyvaskyla"/]
     gtfsrtseparatedfikuopio[/"gtfsrt-vp-entities-separated-fi-kuopio"/]
     mqttraw[/"mqtt-apc-from-vehicle"/]
-    vehicledetails[/"vehicle-details"/]
+    vehicledetailsfijyvaskyla[/"vehicle-catalogue-fi-jyvaskyla"/]
+    vehicledetailsfikuopio[/"vehicle-catalogue-fi-kuopio"/]
   end
 
   %% Edges
 
-  accumulated --> anonymizer
-  accumulator --> accumulated
-  aggregated --> accumulator
-  aggregated --> apitopowerbi
-  aggregated --> dbsink
-  anonymized --> apitortpioutput
+  aggregated --> anonymizer
+  aggregated --> pulsarmqttforwardertopowerbi
+  anonymized --> pulsarmqttforwardertortpioutput
   anonymizer --> anonymized
-  apitopowerbi --> externalsinks
-  apitortpioutput --> externalsinks
-  dbsink --> externalsinks
-  externalsources --> httppulsarpollerfijyvaskyla
+  externalsources --> gtfsrtpollerfijyvaskyla
   externalsources --> httppulsarpollerfikuopio
   externalsources --> mqttpulsarforwarder
-  externalsources --> vehicleregistryapiuser
+  externalsources --> vehicleregistrypollerfijyvaskyla
+  externalsources --> vehicleregistrypollerfikuopio
   gtfsrtdeduplicatedfijyvaskyla --> matcher
   gtfsrtdeduplicatedfikuopio --> matcher
   gtfsrtentitydeduplicatorfijyvaskyla --> gtfsrtdeduplicatedfijyvaskyla
@@ -194,7 +173,7 @@ flowchart TB
   gtfsrtrawfikuopio --> gtfsrtentityseparatorfikuopio
   gtfsrtseparatedfijyvaskyla --> gtfsrtentitydeduplicatorfijyvaskyla
   gtfsrtseparatedfikuopio --> gtfsrtentitydeduplicatorfikuopio
-  httppulsarpollerfijyvaskyla --> gtfsrtrawfijyvaskyla
+  gtfsrtpollerfijyvaskyla --> gtfsrtrawfijyvaskyla
   httppulsarpollerfikuopio --> gtfsrtrawfikuopio
   matcher --> aggregated
   mqttapcmessagecleaner --> mqttcleaned
@@ -203,22 +182,24 @@ flowchart TB
   mqttdeduplicator --> mqttdeduplicated
   mqttpulsarforwarder --> mqttraw
   mqttraw --> mqttdeduplicator
-  vehicledetails --> anonymizer
-  vehicledetails --> matcher
-  vehicleregistryapiuser --> vehicledetails
+  pulsarmqttforwardertopowerbi --> externalsinks
+  pulsarmqttforwardertortpioutput --> externalsinks
+  vehicleanonymizationprofile --> anonymizer
+  vehicleanonymizationprofiler --> vehicleanonymizationprofile
+  vehicledetailsfijyvaskyla --> matcher
+  vehicledetailsfikuopio --> matcher
+  vehicledetailsfijyvaskyla --> vehicleanonymizationprofiler
+  vehicledetailsfikuopio --> vehicleanonymizationprofiler
+  vehicleregistrypollerfijyvaskyla --> vehicledetailsfijyvaskyla
+  vehicleregistrypollerfikuopio --> vehicledetailsfikuopio
 
   %% Styling
 
-  classDef deprecated fill:#fbaf60,stroke:#000,stroke-width:1px,color:#000,stroke-dasharray: 6 6
-  class dbsink deprecated
-
   classDef done fill:#b2e08a,stroke:#000
   class aggregated done
-  class gtfsrtentitydeduplicatorfijyvaskyla done
-  class gtfsrtentitydeduplicatorfikuopio done
   class gtfsrtrawfijyvaskyla done
   class gtfsrtrawfikuopio done
-  class httppulsarpollerfijyvaskyla done
+  class gtfsrtpollerfijyvaskyla done
   class httppulsarpollerfikuopio done
   class matcher done
   class mqttdeduplicated done
@@ -229,21 +210,25 @@ flowchart TB
   classDef env fill:#f7f7f7,stroke:#000
   class nsaggregation env
   class nscleaned env
+  class nsdeduplicated env
   class nsopen env
-  class nsretained env
   class nssource env
 
   classDef external fill:#1f78b6,stroke:#000,color:#fff
   class externalsinks external
   class externalsources external
 
+  classDef implemented fill:#dfc4f2,stroke:#000
+  class gtfsrtentitydeduplicatorfijyvaskyla implemented
+  class gtfsrtentitydeduplicatorfikuopio implemented
+  class pulsarmqttforwardertopowerbi implemented
+  class pulsarmqttforwardertortpioutput implemented
+  class vehicleregistrypollerfijyvaskyla implemented
+  class vehicleregistrypollerfikuopio implemented
+
   classDef todo fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
-  class accumulated todo
-  class accumulator todo
   class anonymized todo
   class anonymizer todo
-  class apitopowerbi todo
-  class apitortpioutput todo
   class gtfsrtdeduplicatedfijyvaskyla todo
   class gtfsrtdeduplicatedfikuopio todo
   class gtfsrtentityseparatorfijyvaskyla todo
@@ -252,21 +237,23 @@ flowchart TB
   class gtfsrtseparatedfikuopio todo
   class mqttapcmessagecleaner todo
   class mqttcleaned todo
-  class vehicledetails todo
-  class vehicleregistryapiuser todo
+  class vehicleanonymizationprofile todo
+  class vehicleanonymizationprofiler todo
+  class vehicledetailsfijyvaskyla todo
+  class vehicledetailsfikuopio todo
 
   %% Legend
 
   subgraph legend["Legend"]
     legendtodo("Todo")
+    legendimplemented("Implemented but not deployed")
     legenddone("Done")
-    legenddeprecated("Deprecated")
     legendexternal("External")
   end
   class legend env
-  class legenddeprecated deprecated
   class legenddone done
   class legendexternal external
+  class legendimplemented implemented
   class legendtodo todo
 ```
 
