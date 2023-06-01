@@ -127,7 +127,7 @@ flowchart TB
   vehicleanonymizationprofiler("vehicle-anonymization-profiler:<br/>waltti-apc-vehicle-anonymization-profiler")
   vehicleregistrypollerfijyvaskyla("vehicle-registry-poller-fi-jyvaskyla:<br/>http-pulsar-poller (1 is enough)")
   vehicleregistrypollerfikuopio("vehicle-registry-poller-fi-kuopio:<br/>http-pulsar-poller (1 is enough)")
-  subgraph nsaggregation["namespace aggregation"]
+  subgraph nsaggregated["namespace aggregated"]
     aggregated[/"aggregated-apc-journey"/]
   end
   subgraph nscleaned["namespace cleaned (schema enforced)"]
@@ -139,7 +139,7 @@ flowchart TB
     gtfsrtdeduplicatedfikuopio[/"gtfsrt-vp-deduplicated-fi-kuopio"/]
     mqttdeduplicated[/"mqtt-apc-from-vehicle-deduplicated"/]
   end
-  subgraph nsopen["namespace open"]
+  subgraph nspublished["namespace published"]
     anonymized[/"anonymized-apc-journey"/]
   end
   subgraph nssource["namespace source"]
@@ -208,10 +208,10 @@ flowchart TB
   class mqttraw done
 
   classDef env fill:#f7f7f7,stroke:#000
-  class nsaggregation env
+  class nsaggregated env
   class nscleaned env
   class nsdeduplicated env
-  class nsopen env
+  class nspublished env
   class nssource env
 
   classDef external fill:#1f78b6,stroke:#000,color:#fff
