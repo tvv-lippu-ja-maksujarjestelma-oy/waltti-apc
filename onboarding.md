@@ -49,7 +49,7 @@ We use [Mergify](https://mergify.com/) to merge pull requests by Dependabot.
 Mergify does not have its own bot account.
 Instead, it uses a random organization member's credentials to e.g. rebase pull requests.
 
-Log in with your GitHub account into Mergify at least once to authorize it to use your account, as well.
+Log in with your GitHub account into Mergify at least once and authorize it to use your account, as well.
 
 ## Documentation
 
