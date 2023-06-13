@@ -43,6 +43,14 @@ Use your work email address.
 Ask a team member to add you into the [Waltti APC Preset team](https://manage.app.preset.io/app/teams/21db4948/members).
 Use your work email address.
 
+### Mergify
+
+We use [Mergify](https://mergify.com/) to merge pull requests by Dependabot.
+Mergify does not have its own bot account.
+Instead, it uses a random organization member's credentials to e.g. rebase pull requests.
+
+Log in with your GitHub account into Mergify at least once to authorize it to use your account, as well.
+
 ## Documentation
 
 Documentation is primarily maintained in the [main repository](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc).
