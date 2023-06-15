@@ -266,6 +266,8 @@ MoP seems like a fairly capable MQTT broker that persists every MQTT message ont
 
 [mqtt-pulsar-forwarder](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/mqtt-pulsar-forwarder) forwards messages from the MQTT broker to the Apache Pulsar cluster.
 
+[pulsar-mqtt-forwarder](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/pulsar-mqtt-forwarder) forwards messages from the Apache Pulsar cluster to the MQTT broker.
+
 [pulsar-topic-deduplicator](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/pulsar-topic-deduplicator) forwards only the unique messages from Pulsar topics to another Pulsar topic.
 
 [waltti-apc-aggregation-test-data-generator](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-aggregation-test-data-generator) generates APC aggregation test data into Pulsar.
