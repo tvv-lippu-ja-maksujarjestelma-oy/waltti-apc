@@ -28,8 +28,8 @@ flowchart TB
       httppulsarpoller("GTFS Realtime Vehicle Position poller:<br/>http-pulsar-poller")
       mqttpulsarforwarder("Vehicle APC data MQTT forwarder:<br/>mqtt-pulsar-forwarder")
       pulsarclients("APC business logic<br/>as Pulsar clients")
-      pulsarmqttforwardertopowerbi("Precise APC data MQTT forwarder:<br/>HSLdevcom/pulsar-mqtt-gateway")
-      pulsarmqttforwardertortpioutput("Anonymized APC data MQTT forwarder:<br/>HSLdevcom/pulsar-mqtt-gateway")
+      pulsarmqttforwardertopowerbi("Precise APC data MQTT forwarder:<br/>pulsar-mqtt-forwarder")
+      pulsarmqttforwardertortpioutput("Anonymized APC data MQTT forwarder:<br/>pulsar-mqtt-forwarder")
       vehicleregistryapiuser("Vehicle registry poller:<br/>http-pulsar-poller")
     end
     subgraph streamnative["StreamNative Cloud Hosted"]
@@ -122,8 +122,8 @@ flowchart TB
   mqttapcmessagecleaner("vehicle-apc-message-cleaner:<br/>waltti-apc-mqtt-apc-message-cleaner")
   mqttdeduplicator("vehicle-apc-deduplicator:<br/>pulsar-topic-deduplicator")
   mqttpulsarforwarder("vehicle-apc-forwarder:<br/>mqtt-pulsar-forwarder (1 / AZ)")
-  pulsarmqttforwardertopowerbi("Precise APC data MQTT forwarder:<br/>HSLdevcom/pulsar-mqtt-gateway")
-  pulsarmqttforwardertortpioutput("Anonymized APC data MQTT forwarder:<br/>HSLdevcom/pulsar-mqtt-gateway")
+  pulsarmqttforwardertopowerbi("Precise APC data MQTT forwarder:<br/>pulsar-mqtt-forwarder")
+  pulsarmqttforwardertortpioutput("Anonymized APC data MQTT forwarder:<br/>pulsar-mqtt-forwarder")
   vehicleanonymizationprofiler("vehicle-anonymization-profiler:<br/>waltti-apc-vehicle-anonymization-profiler")
   vehicleregistrypollerfijyvaskyla("vehicle-registry-poller-fi-jyvaskyla:<br/>http-pulsar-poller (1 is enough)")
   vehicleregistrypollerfikuopio("vehicle-registry-poller-fi-kuopio:<br/>http-pulsar-poller (1 is enough)")
