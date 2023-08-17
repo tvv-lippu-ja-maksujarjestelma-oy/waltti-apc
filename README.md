@@ -278,6 +278,8 @@ MoP seems like a fairly capable MQTT broker that persists every MQTT message ont
 
 [waltti-apc-anonymization-plan](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-anonymization-plan) describes the anonymization approach to be used for the GTFS Realtime API.
 
+[waltti-apc-anonymizer](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-anonymizer) anonymizes accurate APC messages and outputs GTFS Realtime OccupancyStatus levels.
+
 [waltti-apc-deployment](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-deployment) provisions, configures and deploys the services for the Waltti APC backend.
 
 [waltti-apc-gcp-terraform](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-gcp-terraform) builds GCP infrastructure with Terraform.
