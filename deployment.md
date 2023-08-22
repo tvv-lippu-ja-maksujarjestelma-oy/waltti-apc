@@ -1,13 +1,16 @@
-# CI/CD flow
+# Deployment
 
-## Happy path:
+## CI/CD flow
 
-### Generic flow
+### Happy path:
+
+#### Generic flow
+
 1. Always pull latest edge tag into dev environment
-2. Run e2e tests in dev. 
+2. Run e2e tests in dev.
 3. e2e tests are separate entity (testing multiple microservices not a single microservice)
 4. Pull the latest service versions that passed e2e tests in dev environment into stage environment, for example every Wednesday morning at 09:00 local time.
-5. In stage manifests, use sha-* tags instead of edge, though. 
+5. In stage manifests, use sha-\* tags instead of edge, though.
 
 In stage and prod, monitor:
 
@@ -32,3 +35,29 @@ If we write broken logic, before reaching prod the logic has to survive:
 If the broken logic breaks the data flow so that a downstream microservice chokes on broken messages it consumes from Pulsar, in dev and stage it is probably easiest to fix the logic bug and forcefully empty the relevant Pulsar topics with broken messages.
 
 If the broken logic reaches prod, we might need to fix the downstream service with a kludge.
+
+## Environments
+
+The following table describes the differences in naming between the environments.
+
+|                                   | pilot dev                                  | pilot prod                                 | dev                                          | staging                                     | prod                                        | common                                                             |
+| --------------------------------- | ------------------------------------------ | ------------------------------------------ | -------------------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------ |
+| Description                       | Pilot phase development environment        | Pilot phase production environment         | Productization phase development environment | Productization phase staging environment    | Productization phase production environment | Common, shared things like DNS management for productization phase |
+| Method                            | ClickOps                                   | ClickOps                                   | IaC                                          | IaC                                         | IaC                                         | IaC                                                                |
+| GCP project                       | apc-sandbox                                | apc-sandbox                                | apc-sandbox                                  | apc-staging                                 |                                             | apc-sandbox                                                        |
+| GCP resource region, e.g. for K8s | europe-west3 (Frankfurt)                   | europe-west3 (Frankfurt)                   | europe-west3 (Frankfurt)                     | europe-west3 (Frankfurt)                    |                                             | europe-west3 (Frankfurt)                                           |
+| K8s cluster                       | sandbox-autopilot                          | sandbox-autopilot                          | prototype                                    | staging                                     |                                             | N/A                                                                |
+| K8s namespace                     | dev                                        | sandbox                                    | dev                                          | staging                                     |                                             | N/A                                                                |
+| CloudAMQP team                    | Waltti                                     | Waltti                                     | Waltti                                       | Waltti                                      |                                             | N/A                                                                |
+| CloudAMQP instance name           | dev-mqtt                                   | dev-mqtt                                   | sandbox-mqtt                                 | staging-mqtt                                |                                             | N/A                                                                |
+| CloudAMQP instance tags           | dev                                        | dev                                        | sandbox                                      | staging                                     |                                             | N/A                                                                |
+| CloudAMQP GCP region              | europe-west3 (Frankfurt)                   | europe-west3 (Frankfurt)                   | europe-west3 (Frankfurt)                     | europe-west3 (Frankfurt)                    |                                             | N/A                                                                |
+| CloudAMQP MQTT hostname           | burly-gold-finch.rmq3.cloudamqp.com        | burly-gold-finch.rmq3.cloudamqp.com        | lively-cobalt-wasp.rmq5.cloudamqp.com        | crisp-green-hippo.rmq2.cloudamqp.com        |                                             | N/A                                                                |
+| MQTT broker CNAME                 | dev.mqtt.apc.lmj.fi                        | dev.mqtt.apc.lmj.fi                        | mqtt-dev.apc.waltti.fi                       | mqtt-staging.apc.waltti.fi                  |                                             | N/A                                                                |
+| StreamNative organization         | waltti                                     | waltti                                     | waltti                                       | waltti                                      |                                             | N/A                                                                |
+| StreamNative instance             | waltti                                     | waltti                                     | alpha                                        | beta                                        |                                             | N/A                                                                |
+| StreamNative cluster              | pulsar                                     | pulsar                                     | sandbox                                      | staging                                     |                                             | N/A                                                                |
+| StreamNative tenant               | apc-dev                                    | apc-sandbox                                | apc-sandbox                                  | apc-staging                                 |                                             | N/A                                                                |
+| StreamNative service URL          | pulsar+ssl://pulsar.waltti.snio.cloud:6651 | pulsar+ssl://pulsar.waltti.snio.cloud:6651 | pulsar+ssl://sandbox.waltti.snio.cloud:6651  | pulsar+ssl://staging.waltti.snio.cloud:6651 |                                             | N/A                                                                |
+| StreamNative OAuth 2.0 audience   | urn:sn:pulsar:waltti:waltti                | urn:sn:pulsar:waltti:waltti                | urn:sn:pulsar:waltti:alpha                   | urn:sn:pulsar:waltti:beta                   |                                             | N/A                                                                |
+| StreamNative GCP region           | europe-west3 (Frankfurt)                   | europe-west3 (Frankfurt)                   | europe-west1                                 | europe-west1                                |                                             | N/A                                                                |
