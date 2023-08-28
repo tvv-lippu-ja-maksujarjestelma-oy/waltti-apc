@@ -186,9 +186,11 @@ flowchart TB
   pulsarmqttforwardertortpioutput --> externalsinks
   vehicleanonymizationprofile --> anonymizer
   vehicleanonymizationprofiler --> vehicleanonymizationprofile
+  vehicledetailsfijyvaskyla --> gtfsrtentityseparatorfijyvaskyla
   vehicledetailsfijyvaskyla --> matcher
-  vehicledetailsfikuopio --> matcher
   vehicledetailsfijyvaskyla --> vehicleanonymizationprofiler
+  vehicledetailsfikuopio --> gtfsrtentityseparatorfikuopio
+  vehicledetailsfikuopio --> matcher
   vehicledetailsfikuopio --> vehicleanonymizationprofiler
   vehicleregistrypollerfijyvaskyla --> vehicledetailsfijyvaskyla
   vehicleregistrypollerfikuopio --> vehicledetailsfikuopio
