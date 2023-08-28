@@ -20,7 +20,7 @@ flowchart TB
   subgraph azure["Microsoft Azure"]
     powerbi("Power BI")
   end
-  subgraph gcp["Google Cloud Platform (europe-west3, Frankfurt)"]
+  subgraph gcp["Google Cloud Platform"]
     subgraph cloudamqp["CloudAMQP"]
       mqtt("MQTT broker")
     end
@@ -62,6 +62,9 @@ flowchart TB
   class mqtt done
   class mqttpulsarforwarder done
   class pulsar done
+  class pulsarmqttforwardertopowerbi done
+  class pulsarmqttforwardertortpioutput done
+  class vehicleregistryapiuser done
 
   classDef env fill:#f7f7f7,stroke:#000
   class aws env
@@ -80,9 +83,6 @@ flowchart TB
   class vehicleregistry external
 
   classDef implemented fill:#dfc4f2,stroke:#000
-  class pulsarmqttforwardertopowerbi implemented
-  class pulsarmqttforwardertortpioutput implemented
-  class vehicleregistryapiuser implemented
 
   classDef todo fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
   class pulsarclients todo
@@ -197,6 +197,8 @@ flowchart TB
 
   classDef done fill:#b2e08a,stroke:#000
   class aggregated done
+  class anonymized done
+  class anonymizer done
   class gtfsrtrawfijyvaskyla done
   class gtfsrtrawfikuopio done
   class gtfsrtpollerfijyvaskyla done
@@ -206,6 +208,9 @@ flowchart TB
   class mqttdeduplicator done
   class mqttpulsarforwarder done
   class mqttraw done
+  class pulsarmqttforwardertopowerbi done
+  class pulsarmqttforwardertortpioutput done
+  class vehicleregistrypollerfikuopio done
 
   classDef env fill:#f7f7f7,stroke:#000
   class nsaggregated env
@@ -221,14 +226,9 @@ flowchart TB
   classDef implemented fill:#dfc4f2,stroke:#000
   class gtfsrtentitydeduplicatorfijyvaskyla implemented
   class gtfsrtentitydeduplicatorfikuopio implemented
-  class pulsarmqttforwardertopowerbi implemented
-  class pulsarmqttforwardertortpioutput implemented
   class vehicleregistrypollerfijyvaskyla implemented
-  class vehicleregistrypollerfikuopio implemented
 
   classDef todo fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
-  class anonymized todo
-  class anonymizer todo
   class gtfsrtdeduplicatedfijyvaskyla todo
   class gtfsrtdeduplicatedfikuopio todo
   class gtfsrtentityseparatorfijyvaskyla todo
