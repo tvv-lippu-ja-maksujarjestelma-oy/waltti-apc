@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://waltti.fi/schema/bundle/1-0-0/anonymized-apc.schema.json",
+  "title": "APC results",
+  "description": "Anonymized automatic passenger counting (APC) results per trip and stop.",
+  "properties": {
+    "schemaVersion": {
+      "description": "The SchemaVer version number of the JSON schema that this message follows. A valid value is for example '1-0-0'.",
+      "type": "string",
+      "minLength": 5
+    },
+    "timestamp": {
+      "description": "A timestamp for when the data was generated. An ISO 8601 UTC timestamp in the strftime format '%Y-%m-%dT%H:%M:%S.%fZ' where '%f' means milliseconds zero-padded on the left. A valid value would be e.g. '2022-11-22T11:27:31.847Z'.",
+      "type": "string",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "authorityId": {
+      "description": "Authority ID as used by Waltti, e.g. '203' for Hämeenlinna. Identifiers listed here: https://opendata.waltti.fi/docs#gtfs-static-packages .",
+      "type": "string",
+      "minLength": 1
+    },
+    "tripId": {
+      "description": "trip_id from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-tripdescriptor",
+      "type": "string",
+      "minLength": 1
+    },
+    "startDate": {
+      "description": "start_date from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-tripdescriptor . Operating date might be longer than 24 hours.",
+      "type": "string",
+      "format": "date",
+      "minLength": 1
+    },
+    "startTime": {
+      "description": "start_time from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-tripdescriptor . Operating date might be longer than 24 hours.",
+      "type": "string",
+      "minLength": 1
+    },
+    "routeId": {
+      "description": "route_id from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-tripdescriptor .",
+      "type": "string",
+      "minLength": 1
+    },
+    "directionId": {
+      "description": "direction_id from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-tripdescriptor .",
+      "type": "integer"
+    },
+    "currentStopSequence": {
+      "description": "current_stop_sequence from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-vehicleposition .",
+      "type": "integer",
+      "minimum": 0
+    },
+    "stopId": {
+      "description": "stop_id from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-vehicleposition .",
+      "type": "string",
+      "minLength": 1
+    },
+    "vehicleId": {
+      "description": "Vehicle ID i.e. VehicleDescriptor.id from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-vehicledescriptor .",
+      "type": "string",
+      "minLength": 1
+    },
+    "occupancyStatus": {
+      "description": "occupancy_status from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-vehicleposition . Only values from 'EMPTY' to 'FULL' are provided via these messages. If no anonymized APC message is available for a particular trip, then use the value 'NO_DATA_AVAILABLE', unless you know that either 'NOT_ACCEPTING_PASSENGERS' or 'NOT_BOARDABLE' is more appropriate.",
+      "enum": [
+        "EMPTY",
+        "MANY_SEATS_AVAILABLE",
+        "FEW_SEATS_AVAILABLE",
+        "STANDING_ROOM_ONLY",
+        "CRUSHED_STANDING_ROOM_ONLY",
+        "FULL"
+      ]
+    }
+  },
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schemaVersion",
+    "timestamp",
+    "authorityId",
+    "currentStopSequence",
+    "directionId",
+    "routeId",
+    "startDate",
+    "startTime",
+    "stopId",
+    "tripId",
+    "vehicleId",
+    "occupancyStatus"
+  ]
+}

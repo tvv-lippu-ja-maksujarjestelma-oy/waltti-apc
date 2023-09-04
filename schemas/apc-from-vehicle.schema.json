@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://waltti.fi/schema/bundle/1-1-0/apc-from-vehicle.schema.json",
+  "title": "APC data from a vehicle",
+  "description": "A single message of automatic passenger counting (APC) data sent from a vehicle to a centralized server. Inspired by the Helsinki Regional Transport Authority (HSL) APC interface and the ITxPT APC specification.",
+  "type": "object",
+  "properties": {
+    "APC": {
+      "description": "A wrapper object for the APC message",
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "description": "The SchemaVer version number of this JSON schema that this message follows. It must match a published SchemaVer version number from the '$id' key of this JSON schema. A valid value is for example '1-0-0' or '1-1-0'.",
+          "type": "string"
+        },
+        "countingSystemId": {
+          "description": "An ID for the onboard APC system in one vehicle. Used to differentiate between different sensor systems from different vendors in different vehicles. E.g. 'vendor1-client2-apc-device3' or possibly a UUIDv4 string. Needs to be universally unique.",
+          "type": "string"
+        },
+        "messageId": {
+          "description": "UUIDv4 for each unique message",
+          "type": "string",
+          "format": "uuid"
+        },
+        "tst": {
+          "description": "A timestamp for when the data was generated. An ISO 8601 UTC timestamp in the strftime format '%Y-%m-%dT%H:%M:%S.%fZ' where '%f' means milliseconds zero-padded on the left. A valid value would be e.g. '2021-11-22T10:57:08.647Z'. Use 24-hour linear smear from noon to noon UTC for leap seconds, like Google: https://developers.google.com/time/smear .",
+          "type": "string",
+          "format": "date-time"
+        },
+        "vehiclecounts": {
+          "description": "A JSON version of combining ITxPT PassengerDoorCount with PassengerVehicleCount. The format originates from HSL.",
+          "type": "object",
+          "properties": {
+            "vehicleload": {
+              "description": "Number of passengers on-board. Matches ITxPT VehicleOccupancy.",
+              "type": "integer",
+              "minimum": 0
+            },
+            "countquality": {
+              "description": "Information on the quality of counting",
+              "enum": ["regular", "defect", "other"]
+            },
+            "doorcounts": {
+              "description": "JSON version of ITxPT PassengerDoorCount",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "door": {
+                    "description": "Identification of the door. The door closest to the front of the vehicle is 'door1'. The next door is 'door2' etc.",
+                    "type": "string",
+                    "pattern": "^door[0-9]+$"
+                  },
+                  "count": {
+                    "description": "JSON version of ITxPT PassengerCounting",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "class": {
+                          "description": "Information on the passenger type",
+                          "enum": [
+                            "adult",
+                            "child",
+                            "pram",
+                            "bike",
+                            "wheelchair",
+                            "other"
+                          ]
+                        },
+                        "in": {
+                          "description": "Number of passengers having boarded",
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "out": {
+                          "description": "Number of passengers having alighted",
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      },
+                      "required": ["in", "out"],
+                      "additionalProperties": false
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": ["door", "count"],
+                "additionalProperties": true
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          },
+          "anyOf": [
+            {
+              "required": ["vehicleload"]
+            },
+            {
+              "required": ["doorcounts"]
+            }
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": ["tst"],
+      "additionalProperties": true
+    }
+  },
+  "required": ["APC"],
+  "additionalProperties": false
+}

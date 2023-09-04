@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://waltti.fi/schema/bundle/1-0-0/vehicle-apc-mapping.schema.json",
+  "title": "Mapping between APC devices and vehicles",
+  "description": "Each vehicle may contain zero, one or more installed APC devices. This schema describes a message format only for vehicles that have at least one APC device installed.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "operatorId": {
+        "type": "string",
+        "description": "The ID of the operator. A unique identifier for a vehicle in the context of the vehicle registry is formed by catenating operatorId and vehicleShortName: 'operatorId_vehicleShortName'.",
+        "minLength": 1
+      },
+      "vehicleShortName": {
+        "description": "The number on the side of the vehicle. A unique identifier for a vehicle in the context of the vehicle registry is formed by catenating operatorId and vehicleShortName: 'operatorId_vehicleShortName'.",
+        "type": "string",
+        "minLength": 1
+      },
+      "vehicleRegistrationNumber": {
+        "type": "string",
+        "minLength": 1
+      },
+      "standingCapacity": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "seatingCapacity": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "equipment": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "apcSystem": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["type", "id"],
+          "additionalProperties": true
+        },
+        "minItems": 1,
+        "uniqueItems": true
+      }
+    },
+    "required": ["operatorId", "equipment", "vehicleShortName"],
+    "additionalProperties": true
+  },
+  "minItems": 0,
+  "uniqueItems": true
+}

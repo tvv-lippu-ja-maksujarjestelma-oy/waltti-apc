@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://waltti.fi/schema/bundle/1-0-0/apc.schema.json",
+  "title": "APC results",
+  "description": "Automatic passenger counting (APC) results per stop and trip.",
+  "properties": {
+    "schemaVersion": {
+      "description": "The SchemaVer version number of the JSON schema that this message follows. A valid value is for example '1-0-0'.",
+      "type": "string",
+      "minLength": 5
+    },
+
+    "authorityId": {
+      "description": "Authority ID as used by Waltti, e.g. '203' for Hämeenlinna. Identifiers listed here: https://opendata.waltti.fi/docs#gtfs-static-packages .",
+      "type": "string",
+      "minLength": 1
+    },
+    "timezoneName": {
+      "description": "Timezone identifier for the GTFS Realtime trip details as defined by the tz (IANA) database. A valid value would be e.g. 'Europe/Helsinki'.",
+      "type": "string",
+      "minLength": 1
+    },
+    "gtfsrtTripId": {
+      "description": "trip_id from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-tripdescriptor",
+      "type": "string",
+      "minLength": 1
+    },
+    "gtfsrtStartDate": {
+      "description": "start_date from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-tripdescriptor . Operating date might be longer than 24 hours.",
+      "type": "string",
+      "format": "date",
+      "minLength": 1
+    },
+    "gtfsrtStartTime": {
+      "description": "start_time from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-tripdescriptor . Operating date might be longer than 24 hours.",
+      "type": "string",
+      "minLength": 1
+    },
+    "gtfsrtRouteId": {
+      "description": "route_id from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-tripdescriptor .",
+      "type": "string",
+      "minLength": 1
+    },
+    "gtfsrtDirectionId": {
+      "description": "direction_id from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-tripdescriptor .",
+      "type": "integer"
+    },
+    "gtfsrtCurrentStopSequence": {
+      "description": "current_stop_sequence from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-vehicleposition .",
+      "type": "integer",
+      "minimum": 0
+    },
+    "gtfsrtStopId": {
+      "description": "stop_id from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-vehicleposition .",
+      "type": "string",
+      "minLength": 1
+    },
+    "gtfsrtVehicleId": {
+      "description": "Vehicle ID i.e. VehicleDescriptor.id from the GTFS Realtime specification: https://gtfs.org/realtime/reference/#message-vehicledescriptor .",
+      "type": "string",
+      "minLength": 1
+    },
+    "utcStartTime": {
+      "description": "A timestamp for the start time including the date. Unlike gtfsrtStartDate and gtfsrtStartTime, this value follows the usual Gregorian calendar so that outside of leap seconds there is exactly one timestamp representation for each moment in time. The value is an ISO 8601 UTC timestamp in the strftime format '%Y-%m-%dT%H:%M:%SZ'. A valid value would be e.g. '2021-11-22T10:57:08Z'. Use 24-hour linear smear from noon to noon UTC for leap seconds, like Google: https://developers.google.com/time/smear .",
+      "type": "string",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "countingDeviceId": {
+      "description": "An ID for the onboard APC system in one vehicle.",
+      "type": "string",
+      "minLength": 1
+    },
+    "countingVendorName": {
+      "description": "The name of the APC vendor that is responsible for this counting device.",
+      "type": "string",
+      "minLength": 1
+    },
+    "countQuality": {
+      "description": "Information on the quality of the counting result, as described by the ITxPT standard.",
+      "enum": ["regular", "defect", "other"]
+    },
+    "doorClassCounts": {
+      "items": {
+        "properties": {
+          "doorName": {
+            "description": "Identification of the door. The door closest to the front of a bus is '1'. The next door is '2' etc. The string type allows us to use this field later for unordered door names, for example in trains.",
+            "type": "string",
+            "minLength": 1
+          },
+          "countClass": {
+            "description": "Passenger type as described by ITxPT.",
+            "type": "string",
+            "enum": ["adult", "child", "pram", "bike", "wheelchair", "other"]
+          },
+          "in": {
+            "description": "Number of passengers having boarded",
+            "type": "integer",
+            "minimum": 0
+          },
+          "out": {
+            "description": "Number of passengers having alighted",
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["countClass", "doorName", "in", "out"]
+      },
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "authorityId",
+    "countQuality",
+    "countingDeviceId",
+    "countingVendorName",
+    "doorClassCounts",
+    "gtfsrtDirectionId",
+    "gtfsrtRouteId",
+    "gtfsrtStartDate",
+    "gtfsrtStartTime",
+    "gtfsrtStopId",
+    "gtfsrtCurrentStopSequence",
+    "gtfsrtTripId",
+    "gtfsrtVehicleId",
+    "timezoneName",
+    "utcStartTime"
+  ]
+}
