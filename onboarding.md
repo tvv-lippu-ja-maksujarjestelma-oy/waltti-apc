@@ -49,7 +49,7 @@ We use [Mergify](https://mergify.com/) to merge pull requests by Dependabot.
 Mergify does not have its own bot account.
 Instead, it uses a random organization member's credentials to e.g. rebase pull requests.
 
-Log in with your GitHub account into Mergify at least once and authorize it to use your account, as well.
+Log in with your GitHub account into Mergify at least once and authorize it to use your account, as well. When creating a new repository ask the admins to add it to Mergify.
 
 ## Documentation
 
@@ -105,6 +105,7 @@ If you are creating a new repository from scratch:
 1. Add the file LICENSE as the first commit.
    It should contain the `EUPL-1.2` license.
    You can copy the file from the [main repository](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc/blob/main/LICENSE).
+1. Ask the admins to add Mergify to the repository and authorize it on your account.
 1. Copy the repository settings from [waltti-apc-journey-matcher](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-journey-matcher/settings).
    If you use different settings, document those settings and the rationale.
 1. Copy what you need from our existing microservices.
