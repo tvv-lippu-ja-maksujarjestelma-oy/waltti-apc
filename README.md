@@ -114,8 +114,8 @@ flowchart TB
   externalsources("External sources")
   gtfsrtentitydeduplicatorfijyvaskyla("gtfsrt-vp-deduplicator-fi-jyvaskyla:<br/>pulsar-topic-deduplicator")
   gtfsrtentitydeduplicatorfikuopio("gtfsrt-vp-deduplicator-fi-kuopio:<br/>pulsar-topic-deduplicator")
-  gtfsrtentityseparatorfijyvaskyla("gtfsrt-vp-entity-separator-fi-jyvaskyla:<br/>waltti-apc-gtfsrt-entity-separator")
-  gtfsrtentityseparatorfikuopio("gtfsrt-vp-entity-separator-fi-kuopio:<br/>waltti-apc-gtfsrt-entity-separator")
+  gtfsrtentityseparatorfijyvaskyla("gtfsrt-vp-vehicle-position-splitter-fi-jyvaskyla:<br/>waltti-apc-vehicle-position-splitter")
+  gtfsrtentityseparatorfikuopio("gtfsrt-vp-vehicle-position-splitter-fi-kuopio:<br/>waltti-apc-vehicle-position-splitter")
   gtfsrtpollerfijyvaskyla("gtfsrt-vp-poller-fi-jyvaskyla:<br/>http-pulsar-poller (1 / AZ)")
   httppulsarpollerfikuopio("gtfsrt-vp-poller-fi-kuopio:<br/>http-pulsar-poller (1 / AZ)")
   matcher("journey-matcher:<br/>waltti-apc-journey-matcher")
@@ -291,3 +291,6 @@ MoP seems like a fairly capable MQTT broker that persists every MQTT message ont
 [waltti-apc-pilot-analysis](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-pilot-analysis) analyzes the pilot results.
 
 [waltti-apc-pilot-spec](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-pilot-spec) contains the technical specifications for the pilot partners, i.e. the vendors who create the onboard counting devices.
+
+[waltti-apc-vehicle-position-splitter](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-vehicle-position-splitter) 
+splits Vehicle Position feed snapshots by vehicle and send onwards only the data for vehicles with APC devices onboard, each vehicle in an individual message
