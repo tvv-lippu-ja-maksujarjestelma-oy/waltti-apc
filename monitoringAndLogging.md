@@ -55,4 +55,3 @@ As there's a dedicated service and plan (`waltti-apc-anonymization-plan` & `walt
 - **Service Documentation:** Each microservice should have documentation detailing its logging and monitoring specifics.
 - **Regular Reviews:** Periodically assess the effectiveness of the monitoring and logging setup. Adjust as the system evolves.
 - **Feedback Loop:** Encourage team members to provide feedback on the usefulness of alerts and dashboards. Adjust to reduce noise and enhance utility.
-

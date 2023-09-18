@@ -292,5 +292,5 @@ MoP seems like a fairly capable MQTT broker that persists every MQTT message ont
 
 [waltti-apc-pilot-spec](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-pilot-spec) contains the technical specifications for the pilot partners, i.e. the vendors who create the onboard counting devices.
 
-[waltti-apc-vehicle-position-splitter](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-vehicle-position-splitter) 
+[waltti-apc-vehicle-position-splitter](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-vehicle-position-splitter)
 splits Vehicle Position feed snapshots by vehicle and send onwards only the data for vehicles with APC devices onboard, each vehicle in an individual message

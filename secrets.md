@@ -7,11 +7,9 @@
 5. terraform.tfvars file should not be commited to repo
 6. avoid terraform outputs in GitGub Actions
 
-
-
 ## TODO
 
 1. naming conditions
 2. conditional access via SA
 3. Kubernetes CSI secret driver test
-4. Problems how to create secrets? 
+4. Problems how to create secrets?
