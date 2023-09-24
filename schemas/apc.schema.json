@@ -9,7 +9,6 @@
       "type": "string",
       "minLength": 5
     },
-
     "authorityId": {
       "description": "Authority ID as used by Waltti, e.g. '203' for Hämeenlinna. Identifiers listed here: https://opendata.waltti.fi/docs#gtfs-static-packages .",
       "type": "string",
