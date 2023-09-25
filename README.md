@@ -260,9 +260,6 @@ flowchart TB
   class legendtodo todo
 ```
 
-Later on, we might switch from a separate MQTT broker onto MQTT-on-Pulsar (MoP).
-MoP seems like a fairly capable MQTT broker that persists every MQTT message onto Apache Pulsar automatically.
-
 ## Other repositories
 
 [http-pulsar-poller](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/http-pulsar-poller) polls an HTTP endpoint, e.g. a GTFS Realtime API, and sends the data into Apache Pulsar.
