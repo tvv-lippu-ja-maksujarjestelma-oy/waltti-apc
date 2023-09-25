@@ -114,33 +114,35 @@ flowchart TB
   externalsources("External sources")
   gtfsrtentitydeduplicatorfijyvaskyla("gtfsrt-vp-deduplicator-fi-jyvaskyla:<br/>pulsar-topic-deduplicator")
   gtfsrtentitydeduplicatorfikuopio("gtfsrt-vp-deduplicator-fi-kuopio:<br/>pulsar-topic-deduplicator")
-  gtfsrtentityseparatorfijyvaskyla("gtfsrt-vp-vehicle-position-splitter-fi-jyvaskyla:<br/>waltti-apc-vehicle-position-splitter")
-  gtfsrtentityseparatorfikuopio("gtfsrt-vp-vehicle-position-splitter-fi-kuopio:<br/>waltti-apc-vehicle-position-splitter")
+  gtfsrtentityseparatorfijyvaskyla("gtfsrt-vp-entity-separator-fi-jyvaskyla:<br/>waltti-apc-gtfsrt-entity-separator")
+  gtfsrtentityseparatorfikuopio("gtfsrt-vp-entity-separator-fi-kuopio:<br/>waltti-apc-gtfsrt-entity-separator")
   gtfsrtpollerfijyvaskyla("gtfsrt-vp-poller-fi-jyvaskyla:<br/>http-pulsar-poller (1 / AZ)")
   httppulsarpollerfikuopio("gtfsrt-vp-poller-fi-kuopio:<br/>http-pulsar-poller (1 / AZ)")
   matcher("journey-matcher:<br/>waltti-apc-journey-matcher")
   mqttapcmessagecleaner("vehicle-apc-message-cleaner:<br/>waltti-apc-mqtt-apc-message-cleaner")
   mqttdeduplicator("vehicle-apc-deduplicator:<br/>pulsar-topic-deduplicator")
   mqttpulsarforwarder("vehicle-apc-forwarder:<br/>mqtt-pulsar-forwarder (1 / AZ)")
-  pulsarmqttforwardertopowerbi("Precise APC data MQTT forwarder:<br/>pulsar-mqtt-forwarder")
-  pulsarmqttforwardertortpioutput("Anonymized APC data MQTT forwarder:<br/>pulsar-mqtt-forwarder")
+  pulsarmqttforwardertopowerbi("Precise APC data MQTT forwarder:<br/>HSLdevcom/pulsar-mqtt-gateway")
+  pulsarmqttforwardertortpioutput("Anonymized APC data MQTT forwarder:<br/>HSLdevcom/pulsar-mqtt-gateway")
   vehicleanonymizationprofiler("vehicle-anonymization-profiler:<br/>waltti-apc-vehicle-anonymization-profiler")
   vehicleregistrypollerfijyvaskyla("vehicle-registry-poller-fi-jyvaskyla:<br/>http-pulsar-poller (1 is enough)")
   vehicleregistrypollerfikuopio("vehicle-registry-poller-fi-kuopio:<br/>http-pulsar-poller (1 is enough)")
   subgraph nsaggregated["namespace aggregated (schema enforced)"]
     aggregated[/"aggregated-apc-journey"/]
   end
+  subgraph nsanonymized["namespace anonymized (schema enforced)"]
+    anonymized[/"anonymized-apc-journey"/]
+  end
   subgraph nscleaned["namespace cleaned (schema enforced)"]
     mqttcleaned[/"mqtt-apc-from-vehicle-cleaned"/]
-    vehicleanonymizationprofile[/"vehicle-anonymization-profile"/]
   end
   subgraph nsdeduplicated["namespace deduplicated"]
     gtfsrtdeduplicatedfijyvaskyla[/"gtfsrt-vp-deduplicated-fi-jyvaskyla"/]
     gtfsrtdeduplicatedfikuopio[/"gtfsrt-vp-deduplicated-fi-kuopio"/]
     mqttdeduplicated[/"mqtt-apc-from-vehicle-deduplicated"/]
   end
-  subgraph nsanonymized["namespace anonymized (schema enforced)"]
-    anonymized[/"anonymized-apc-journey"/]
+  subgraph nsprofiles["namespace profiles (schema enforced)"]
+    vehicleanonymizationprofile[/"vehicle-anonymization-profiles"/]
   end
   subgraph nssource["namespace source"]
     gtfsrtrawfijyvaskyla[/"gtfsrt-vp-fi-jyvaskyla"/]
@@ -186,11 +188,9 @@ flowchart TB
   pulsarmqttforwardertortpioutput --> externalsinks
   vehicleanonymizationprofile --> anonymizer
   vehicleanonymizationprofiler --> vehicleanonymizationprofile
-  vehicledetailsfijyvaskyla --> gtfsrtentityseparatorfijyvaskyla
   vehicledetailsfijyvaskyla --> matcher
-  vehicledetailsfijyvaskyla --> vehicleanonymizationprofiler
-  vehicledetailsfikuopio --> gtfsrtentityseparatorfikuopio
   vehicledetailsfikuopio --> matcher
+  vehicledetailsfijyvaskyla --> vehicleanonymizationprofiler
   vehicledetailsfikuopio --> vehicleanonymizationprofiler
   vehicleregistrypollerfijyvaskyla --> vehicledetailsfijyvaskyla
   vehicleregistrypollerfikuopio --> vehicledetailsfikuopio
@@ -212,6 +212,7 @@ flowchart TB
   class mqttraw done
   class pulsarmqttforwardertopowerbi done
   class pulsarmqttforwardertortpioutput done
+  class vehicledetailsfikuopio done
   class vehicleregistrypollerfikuopio done
 
   classDef env fill:#f7f7f7,stroke:#000
@@ -219,6 +220,7 @@ flowchart TB
   class nscleaned env
   class nsdeduplicated env
   class nsanonymized env
+  class nsprofiles env
   class nssource env
 
   classDef external fill:#1f78b6,stroke:#000,color:#fff
@@ -228,6 +230,7 @@ flowchart TB
   classDef implemented fill:#dfc4f2,stroke:#000
   class gtfsrtentitydeduplicatorfijyvaskyla implemented
   class gtfsrtentitydeduplicatorfikuopio implemented
+  class vehicleanonymizationprofiler implemented
   class vehicleregistrypollerfijyvaskyla implemented
 
   classDef todo fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
@@ -240,9 +243,7 @@ flowchart TB
   class mqttapcmessagecleaner todo
   class mqttcleaned todo
   class vehicleanonymizationprofile todo
-  class vehicleanonymizationprofiler todo
   class vehicledetailsfijyvaskyla todo
-  class vehicledetailsfikuopio todo
 
   %% Legend
 
