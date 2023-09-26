@@ -290,4 +290,8 @@ flowchart TB
 
 [waltti-apc-pilot-spec](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-pilot-spec) contains the technical specifications for the pilot partners, i.e. the vendors who create the onboard counting devices.
 
+[waltti-apc-vehicle-anonymization-profiler](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-vehicle-anonymization-profiler) creates anonymization profiles for vehicles.
+
+[waltti-apc-vehicle-anonymization-profiler-library](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-vehicle-anonymization-profiler-library) is a fork of apc-anonymizer to have more control over changes. apc-anonymizer anonymizes automatic passenger counting (APC) results for public transit using differential privacy (DP).
+
 [waltti-apc-vehicle-position-splitter](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-vehicle-position-splitter) splits Vehicle Position feed snapshots by vehicle and sends onwards only the data for vehicles with APC devices onboard, each vehicle in an individual message.
