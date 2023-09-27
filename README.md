@@ -1,6 +1,6 @@
 # Waltti-APC
 
-The automatic passenger counting (APC) pilot for Waltti.
+The automatic passenger counting (APC) system for Waltti.
 
 This main repository documents the high-level structure of the project, links to the other repositories of the project and contains the issues and the Kanban board.
 
