@@ -1,4 +1,4 @@
-# waltti-apc
+# Waltti-APC
 
 The automatic passenger counting (APC) pilot for Waltti.
 
