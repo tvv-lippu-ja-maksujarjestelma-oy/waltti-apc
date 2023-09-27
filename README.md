@@ -282,13 +282,13 @@ flowchart TB
 
 [waltti-apc-pilot-analysis](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-pilot-analysis) analyzes the pilot results.
 
-[waltti-apc-pilot-spec](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-pilot-spec) contains the technical specifications for the pilot partners, i.e. the vendors who create the onboard counting devices.
-
 [waltti-apc-vehicle-anonymization-profiler](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-vehicle-anonymization-profiler) creates anonymization profiles for vehicles.
 
 [waltti-apc-vehicle-anonymization-profiler-library](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-vehicle-anonymization-profiler-library) is a fork of apc-anonymizer to have more control over changes. apc-anonymizer anonymizes automatic passenger counting (APC) results for public transit using differential privacy (DP).
 
 [waltti-apc-vehicle-position-splitter](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-vehicle-position-splitter) splits Vehicle Position feed snapshots by vehicle and sends onwards only the data for vehicles with APC devices onboard, each vehicle in an individual message.
+
+[waltti-apc-vehicle-specification](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-vehicle-specification) contains the technical specification for the API from the vehicles to the Waltti-APC backend.
 
 ### Deprecated repositories
 
@@ -297,3 +297,5 @@ flowchart TB
 [waltti-apc-analytics-db-schema-migrator](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-analytics-db-schema-migrator) creates and maintains the Waltti APC analytics database schema.
 
 [waltti-apc-analytics-db-sink](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-analytics-db-sink) forwards aggregated APC data into the analytics database.
+
+[waltti-apc-pilot-spec](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-pilot-spec) contains the technical specifications for the pilot partners, i.e. the vendors who create the onboard counting devices.
