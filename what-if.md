@@ -63,7 +63,7 @@ For more inforation, see `ACCEPTED_DEVICE_MAP` in [waltti-apc-anonymizer](https:
 ### [waltti-apc-gcp-terraform](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-gcp-terraform)
 - Download the preferred install.yaml version from [argocd releases](https://github.com/argoproj/argo-cd/releases/) (pick non-HA) and add it to `k8s/argocd/argocd-install-<version>.yaml`
 - Diff the old and new version
-- If it looks okay, remove the old file and apply the new installation to kubernetes
+- If it looks okay, remove the old file and apply the new installation to kubernetes. Make sure you are on the same cluster as the old argocd installation.
 
 <br>
 
