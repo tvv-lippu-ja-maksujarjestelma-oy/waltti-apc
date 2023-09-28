@@ -18,7 +18,7 @@ Adding a new municipality works mostly by copy-pasting city-specific manifests a
 - Copy ArgoCD settings in `k8s/argocd-settings/` and apply them to kubernetes.
 
 ### [waltti-apc-anonymizer](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-anonymizer)
-- `README.md` contains instructions on bypassing the vehicle registry on early stages of municipality integration.
+- `README.md` contains instructions on bypassing the vehicle registry on early stages of municipality integration, see `IS_INITIAL_PROFILE_READING_REQUIRED` and `PROFILE_COLLECTION_BASE`
 
 ### [waltti-apc-journey-matcher](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-journey-matcher)
 - If the load for journey-matcher gets too high, consider separating it per-municipality
@@ -38,6 +38,14 @@ Adding a new municipality works mostly by copy-pasting city-specific manifests a
 # New vehicle gets APC devices
 
 - Nothing needs to be done
+
+<br>
+
+# One vehicle, multiple vendors
+
+Vehicle should send passenger data only from one counting system.
+This should only be relevant in pilot/testing cases where there might be systems from multiple vendors aboard.
+For more inforation, see `ACCEPTED_DEVICE_MAP` in [waltti-apc-anonymizer](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-anonymizer)
 
 <br>
 
