@@ -62,6 +62,7 @@ flowchart TB
   class mqtt done
   class mqttpulsarforwarder done
   class pulsar done
+  class pulsarclients done
   class pulsarmqttforwardertopowerbi done
   class pulsarmqttforwardertortpioutput done
   class vehicleregistryapiuser done
@@ -85,7 +86,6 @@ flowchart TB
   classDef implemented fill:#dfc4f2,stroke:#000
 
   classDef todo fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
-  class pulsarclients todo
 
   %% Legend
 
@@ -119,11 +119,10 @@ flowchart TB
   gtfsrtpollerfijyvaskyla("gtfsrt-vp-poller-fi-jyvaskyla:<br/>http-pulsar-poller (1 / AZ)")
   httppulsarpollerfikuopio("gtfsrt-vp-poller-fi-kuopio:<br/>http-pulsar-poller (1 / AZ)")
   matcher("journey-matcher:<br/>waltti-apc-journey-matcher")
-  mqttapcmessagecleaner("vehicle-apc-message-cleaner:<br/>waltti-apc-mqtt-apc-message-cleaner")
   mqttdeduplicator("vehicle-apc-deduplicator:<br/>pulsar-topic-deduplicator")
   mqttpulsarforwarder("vehicle-apc-forwarder:<br/>mqtt-pulsar-forwarder (1 / AZ)")
-  pulsarmqttforwardertopowerbi("Precise APC data MQTT forwarder:<br/>HSLdevcom/pulsar-mqtt-gateway")
-  pulsarmqttforwardertortpioutput("Anonymized APC data MQTT forwarder:<br/>HSLdevcom/pulsar-mqtt-gateway")
+  pulsarmqttforwardertopowerbi("Precise APC data MQTT forwarder:<br/>pulsar-mqtt-forwarder")
+  pulsarmqttforwardertortpioutput("Anonymized APC data MQTT forwarder:<br/>pulsar-mqtt-forwarder")
   vehicleanonymizationprofiler("vehicle-anonymization-profiler:<br/>waltti-apc-vehicle-anonymization-profiler")
   vehicleregistrypollerfijyvaskyla("vehicle-registry-poller-fi-jyvaskyla:<br/>http-pulsar-poller (1 is enough)")
   vehicleregistrypollerfikuopio("vehicle-registry-poller-fi-kuopio:<br/>http-pulsar-poller (1 is enough)")
@@ -132,9 +131,6 @@ flowchart TB
   end
   subgraph nsanonymized["namespace anonymized (schema enforced)"]
     anonymized[/"anonymized-apc-journey"/]
-  end
-  subgraph nscleaned["namespace cleaned (schema enforced)"]
-    mqttcleaned[/"mqtt-apc-from-vehicle-cleaned"/]
   end
   subgraph nsdeduplicated["namespace deduplicated"]
     gtfsrtdeduplicatedfijyvaskyla[/"gtfsrt-vp-deduplicated-fi-jyvaskyla"/]
@@ -172,15 +168,15 @@ flowchart TB
   gtfsrtentityseparatorfijyvaskyla --> gtfsrtseparatedfijyvaskyla
   gtfsrtentityseparatorfikuopio --> gtfsrtseparatedfikuopio
   gtfsrtrawfijyvaskyla --> gtfsrtentityseparatorfijyvaskyla
+  gtfsrtrawfikuopio -.-> matcher
+  gtfsrtrawfijyvaskyla -.-> matcher
   gtfsrtrawfikuopio --> gtfsrtentityseparatorfikuopio
   gtfsrtseparatedfijyvaskyla --> gtfsrtentitydeduplicatorfijyvaskyla
   gtfsrtseparatedfikuopio --> gtfsrtentitydeduplicatorfikuopio
   gtfsrtpollerfijyvaskyla --> gtfsrtrawfijyvaskyla
   httppulsarpollerfikuopio --> gtfsrtrawfikuopio
   matcher --> aggregated
-  mqttapcmessagecleaner --> mqttcleaned
-  mqttcleaned --> matcher
-  mqttdeduplicated --> mqttapcmessagecleaner
+  mqttdeduplicated --> matcher
   mqttdeduplicator --> mqttdeduplicated
   mqttpulsarforwarder --> mqttraw
   mqttraw --> mqttdeduplicator
@@ -203,7 +199,9 @@ flowchart TB
   class anonymizer done
   class gtfsrtrawfijyvaskyla done
   class gtfsrtrawfikuopio done
+  class gtfsrtentityseparatorfikuopio done
   class gtfsrtpollerfijyvaskyla done
+  class gtfsrtseparatedfikuopio done
   class httppulsarpollerfikuopio done
   class matcher done
   class mqttdeduplicated done
@@ -212,12 +210,13 @@ flowchart TB
   class mqttraw done
   class pulsarmqttforwardertopowerbi done
   class pulsarmqttforwardertortpioutput done
+  class vehicleanonymizationprofile done
+  class vehicleanonymizationprofiler done
   class vehicledetailsfikuopio done
   class vehicleregistrypollerfikuopio done
 
   classDef env fill:#f7f7f7,stroke:#000
   class nsaggregated env
-  class nscleaned env
   class nsdeduplicated env
   class nsanonymized env
   class nsprofiles env
@@ -230,19 +229,13 @@ flowchart TB
   classDef implemented fill:#dfc4f2,stroke:#000
   class gtfsrtentitydeduplicatorfijyvaskyla implemented
   class gtfsrtentitydeduplicatorfikuopio implemented
-  class vehicleanonymizationprofiler implemented
+  class gtfsrtentityseparatorfijyvaskyla implemented
   class vehicleregistrypollerfijyvaskyla implemented
 
   classDef todo fill:#fff,stroke:#ccc,stroke-width:1px,color:#666,stroke-dasharray: 6 6
   class gtfsrtdeduplicatedfijyvaskyla todo
   class gtfsrtdeduplicatedfikuopio todo
-  class gtfsrtentityseparatorfijyvaskyla todo
-  class gtfsrtentityseparatorfikuopio todo
   class gtfsrtseparatedfijyvaskyla todo
-  class gtfsrtseparatedfikuopio todo
-  class mqttapcmessagecleaner todo
-  class mqttcleaned todo
-  class vehicleanonymizationprofile todo
   class vehicledetailsfijyvaskyla todo
 
   %% Legend
