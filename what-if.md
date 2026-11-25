@@ -31,15 +31,17 @@ Adding a new municipality works mostly by copy-pasting city-specific manifests a
 - Create staging credentials for MQTT first. Create production credentials only when the staging data is okay.
 - Set the topic permissions so that they can only see their own topic subtree `^apc-from-vehicle\.v[0-9][0-9]*\.fi\.waltti\.<vendor-id>\..*$`. In staging, give read and write permission. In production, give write permission.
 - Deliver new MQTT credentials through a secure channel.
-- Register the counting systems of the vendor in the vehicle registry, see below.
+- Make sure that the authority or the operator registers the counting systems of the vendor in the vehicle registry, see below.
 - Monitor the behaviour, and promote to production if the data is okay.
 
 <br>
 
 # New vehicle gets APC devices
 
-- Register the `countingSystemId` as `PASSENGER_COUNTER` equipment of the vehicle in the vehicle registry.
+- Waltti-APC does not control the vehicle registry. The authority or the operator maintains it, and `vehicle-registry-poller` reads it from its `HTTP_URL`.
+- Ask the authority or the operator to add the `countingSystemId` as `PASSENGER_COUNTER` equipment of the vehicle before the vendor sends data.
   Otherwise journey-matcher drops the messages with "countingSystemId was not mapped to a vehicle".
+- A static `COUNTING_SYSTEM_MAP` in journey-matcher does not help for an authority that has a vehicle registry poller: each vehicle catalogue update removes the entries of that authority.
 
 <br>
 
