@@ -29,7 +29,8 @@ Adding a new municipality works mostly by copy-pasting city-specific manifests a
 
 - Send the vendor the [vehicle specification](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-vehicle-specification) and give them a `<vendor-id>`.
 - Create staging credentials for MQTT first. Create production credentials only when the staging data is okay.
-- Set the topic permissions so that they can only see their own topic subtree `^apc-from-vehicle\.v[0-9][0-9]*\.fi\.waltti\.<vendor-id>\..*$`. In staging, give read and write permission. In production, give write permission.
+- Give the user permissions on the vhost `apc`, the same as the existing `telia` user (`rabbitmqctl list_permissions -p apc`).
+- Set the topic permissions so that they can only see their own topic subtree `^apc-from-vehicle\.v[0-9][0-9]*\.fi\.waltti\.<vendor-id>\..*$`. In staging, give read and write permission. In production, give write permission. This is the policy for new vendors: the existing `telia` user also has read permission in production.
 - Deliver new MQTT credentials through a secure channel.
 - Make sure that the authority or the operator registers the counting systems of the vendor in the vehicle registry, see below.
 - Monitor the behaviour, and promote to production if the data is okay.
@@ -41,6 +42,7 @@ Adding a new municipality works mostly by copy-pasting city-specific manifests a
 - Waltti-APC does not control the vehicle registry. The authority or the operator maintains it, and `vehicle-registry-poller` reads it from its `HTTP_URL`.
 - Ask the authority or the operator to add the `countingSystemId` as `PASSENGER_COUNTER` equipment of the vehicle before the vendor sends data.
   Otherwise journey-matcher drops the messages with "countingSystemId was not mapped to a vehicle".
+- Ask for the full `countingSystemId`. Case does not matter. journey-matcher also accepts a registry ID that is only the part after the first `-`, and some existing Telia entries use that form, for example `0009d80670e0` for `JL479-0009d80670e0`.
 - A static `COUNTING_SYSTEM_MAP` in journey-matcher does not help for an authority that has a vehicle registry poller: each vehicle catalogue update removes the entries of that authority.
 
 <br>
