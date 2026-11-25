@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://waltti.fi/schema/bundle/1-1-0/apc-from-vehicle.schema.json",
+  "$id": "https://waltti.fi/schema/bundle/1-3-0/apc-from-vehicle.schema.json",
   "title": "APC data from a vehicle",
   "description": "A single message of automatic passenger counting (APC) data sent from a vehicle to a centralized server. Inspired by the Helsinki Regional Transport Authority (HSL) APC interface and the ITxPT APC specification.",
   "type": "object",
@@ -10,55 +10,54 @@
       "type": "object",
       "properties": {
         "schemaVersion": {
-          "description": "The SchemaVer version number of this JSON schema that this message follows. It must match a published SchemaVer version number from the '$id' key of this JSON schema. A valid value is for example '1-0-0' or '1-1-0'.",
-          "type": "string"
+          "description": "The SchemaVer version number of this JSON schema that this message follows. It must match a published SchemaVer version number from the '$id' key of this JSON schema. A valid value is for example '1-3-0'.",
+          "type": "string",
+          "pattern": "^1-[0-9]+-[0-9]+$"
         },
         "countingSystemId": {
-          "description": "An ID for the onboard APC system in one vehicle. Used to differentiate between different sensor systems from different vendors in different vehicles. E.g. 'vendor1-client2-apc-device3' or possibly a UUIDv4 string. Needs to be universally unique.",
-          "type": "string"
+          "description": "An ID for the onboard APC system in one vehicle. It must be universally unique, and it must be the same as the last level of the MQTT topic. Use only the characters a-z, A-Z, 0-9 and '-'. A lowercase UUIDv4 string is recommended. Waltti-APC compares the IDs case-insensitively, but the MQTT topic permissions are case-sensitive, so use the same case in the topic and in the payload. Waltti-APC drops the messages of a counting system that is not registered to a vehicle, see the README.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9-]{1,128}$"
         },
         "messageId": {
-          "description": "UUIDv4 for each unique message",
+          "description": "A new UUIDv4 for each new message. When you resend a message, send the same payload with the same messageId.",
           "type": "string",
-          "format": "uuid"
+          "format": "uuid",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
         },
         "tst": {
-          "description": "A timestamp for when the data was generated. An ISO 8601 UTC timestamp in the strftime format '%Y-%m-%dT%H:%M:%S.%fZ' where '%f' means milliseconds zero-padded on the left. A valid value would be e.g. '2021-11-22T10:57:08.647Z'. Use 24-hour linear smear from noon to noon UTC for leap seconds, like Google: https://developers.google.com/time/smear .",
+          "description": "A timestamp for when the data was generated. An ISO 8601 UTC timestamp with exactly three digits of milliseconds and the suffix 'Z', for example '2021-11-22T10:57:08.647Z'. Use 24-hour linear smear from noon to noon UTC for leap seconds, like Google: https://developers.google.com/time/smear .",
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3}Z$"
         },
         "vehiclecounts": {
           "description": "A JSON version of combining ITxPT PassengerDoorCount with PassengerVehicleCount. The format originates from HSL.",
           "type": "object",
           "properties": {
-            "vehicleload": {
-              "description": "Number of passengers on-board. Matches ITxPT VehicleOccupancy.",
-              "type": "integer",
-              "minimum": 0
-            },
             "countquality": {
-              "description": "Information on the quality of counting",
+              "description": "Information on the quality of counting. 'regular': all counting devices of the vehicle worked normally. 'defect': at least one counting device is known to be faulty, so the counts can be incomplete or wrong. 'other': the counts are uncertain for another reason. When several messages are sent for one stop, Waltti-APC uses the lowest quality of them for the stop, in the order 'regular' (highest), 'defect', 'other' (lowest).",
               "enum": ["regular", "defect", "other"]
             },
             "doorcounts": {
-              "description": "JSON version of ITxPT PassengerDoorCount",
+              "description": "JSON version of ITxPT PassengerDoorCount. Include each door at most once in one message.",
               "type": "array",
               "items": {
                 "type": "object",
                 "properties": {
                   "door": {
-                    "description": "Identification of the door. The door closest to the front of the vehicle is 'door1'. The next door is 'door2' etc.",
+                    "description": "Identification of the door. For example, the door closest to the front of a bus is '1'. The next door is '2' etc. Trains might have a different naming structure. Use the same door IDs in all messages of the counting system.",
                     "type": "string",
-                    "pattern": "^door[0-9]+$"
+                    "minLength": 1
                   },
                   "count": {
-                    "description": "JSON version of ITxPT PassengerCounting",
+                    "description": "JSON version of ITxPT PassengerCounting. Include each class at most once for one door.",
                     "type": "array",
                     "items": {
                       "type": "object",
                       "properties": {
                         "class": {
-                          "description": "Information on the passenger type",
+                          "description": "Information on the passenger type. Count each person once as 'adult', 'child' or 'other'. Count a 'pram', 'bike' or 'wheelchair' in addition to the person who has it.",
                           "enum": [
                             "adult",
                             "child",
@@ -79,7 +78,7 @@
                           "minimum": 0
                         }
                       },
-                      "required": ["in", "out"],
+                      "required": ["class", "in", "out"],
                       "additionalProperties": false
                     },
                     "minItems": 1
@@ -92,18 +91,17 @@
               "uniqueItems": true
             }
           },
-          "anyOf": [
-            {
-              "required": ["vehicleload"]
-            },
-            {
-              "required": ["doorcounts"]
-            }
-          ],
+          "required": ["countquality", "doorcounts"],
           "additionalProperties": true
         }
       },
-      "required": ["tst"],
+      "required": [
+        "schemaVersion",
+        "countingSystemId",
+        "messageId",
+        "tst",
+        "vehiclecounts"
+      ],
       "additionalProperties": true
     }
   },
