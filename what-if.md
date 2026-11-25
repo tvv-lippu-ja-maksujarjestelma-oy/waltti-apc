@@ -27,17 +27,19 @@ Adding a new municipality works mostly by copy-pasting city-specific manifests a
 
 # Add new vendor
 
-- Create staging and production credentials for MQTT.
-- Set the topic permissions so that they can only see their own topic subtree
-- Vendors should initially only have write permission to staging.
+- Send the vendor the [vehicle specification](https://github.com/tvv-lippu-ja-maksujarjestelma-oy/waltti-apc-vehicle-specification) and give them a `<vendor-id>`.
+- Create staging credentials for MQTT first. Create production credentials only when the staging data is okay.
+- Set the topic permissions so that they can only see their own topic subtree `^apc-from-vehicle\.v[0-9][0-9]*\.fi\.waltti\.<vendor-id>\..*$`. In staging, give read and write permission. In production, give write permission.
 - Deliver new MQTT credentials through a secure channel.
+- Register the counting systems of the vendor in the vehicle registry, see below.
 - Monitor the behaviour, and promote to production if the data is okay.
 
 <br>
 
 # New vehicle gets APC devices
 
-- Nothing needs to be done
+- Register the `countingSystemId` as `PASSENGER_COUNTER` equipment of the vehicle in the vehicle registry.
+  Otherwise journey-matcher drops the messages with "countingSystemId was not mapped to a vehicle".
 
 <br>
 
